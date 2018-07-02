@@ -1,0 +1,26 @@
+<md-dialog aria-label="2fa">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools" style="background-color: #343a40;">
+                <h2>Two-factor authentication</h2>
+                <span flex></span>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class=" md-dialog-content " style="text-align: center; ">
+                <h2>Enter your code from Google Authenticator.</h2>
+                <input type="text" style="padding-top: 5px;
+                padding-bottom: 5px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                border: 3px solid #12b58b;
+                font-size: 20px; text-align: center;" ng-model="currentCode" ng-change="changeCode()" placeholder="Your code">
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row ">
+            <md-button ng-click="cancel() ">
+                Cancel
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

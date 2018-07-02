@@ -1,0 +1,26 @@
+<div class="body">
+    <form name="userForm">
+        <div class="container">
+            <div class="row">
+                <div class="col align-self-center authDiv">
+                    <label>Login:
+                    </label>
+                    <input type="text" class="form-control emailInput" placeholder="Login" ng-model="userLogin">
+                    <br>
+                    <label>Password:
+                    </label>
+                    <input type="password" ng-model="userPassword" placeholder="Password" class="form-control passwordInput" ng-keydown="$event.keyCode === 13 && signIn()"
+                    />
+                    <!-- <input type="password" ng-model="userPassword" placeholder="Password" class="form-control passwordInput" /> -->
+                    <br>
+                    <md-button ng-click="signIn()" class="md-raised md-primary but">
+                        Sign in
+                    </md-button>
+                    <br>
+                    <p ng-if="service.errorMessage" class="errorMessage">Wrong email or password</p>
+                    <p ng-if="logined" class="errorMessage">You are logged in</p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

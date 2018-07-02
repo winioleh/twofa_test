@@ -1,0 +1,164 @@
+<div class="body" ng-cloak>
+    <md-content class="white">
+        <header>
+            <nav class="navbar navbar-dark bg-dark">
+                <label class="userPage">User page</label>
+                <form class="form-inline ml-auto my-2 my-lg-0">
+                    <!-- <label class="userData">userName userLastName</label> -->
+                    <md-button ng-click="logOut()" class="md-raised md-primary but">
+                        Log out
+                    </md-button>
+                </form>
+            </nav>
+        </header>
+        <div class="container-fluid userTabsContainer">
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="User info">
+                    <md-content class="md-padding white contentPadDown">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col">
+                                    <img src="{{userPhoto}}" alt="userPhoto " class="photoDiv ">
+                                </div>
+                                <div class="col info ">
+                                    <input type="text " ng-model="userLastName " readonly>
+                                </div>
+                                <div class="col info ">
+                                    <input type="text " ng-model="userName " readonly>
+                                </div>
+                                <div class="col info ">
+                                    <input type="text " ng-model="userSurname " readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+                <md-tab label="Account info ">
+                    <md-content class="md-padding white contentPadDown ">
+                        <div class="container-fluid ">
+                            <div class="row ">
+                                <div class="col-4 sec ">
+                                    <ul>
+                                        <li>
+                                            <label>Login:</label>
+                                            <input type="text " ng-model="userLogin " readonly class="loginInput ">
+                                        </li>
+                                        <li>
+                                            <label>Email:</label>
+                                            <input type="text " ng-model="userEmail " readonly class="loginInput ">
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- <div class="col-4 sec ">
+                                    <ul class="center ">
+                                        <li>
+                                            <label>Old password:</label>
+                                        </li>
+                                        <li>
+                                            <label>New password:</label>
+                                        </li>
+                                        <li>
+                                            <label>Confirm new password:</label>
+                                        </li>
+                                    </ul>
+                                </div> -->
+                                <!-- <div class="col-4 sec ">
+                                    <ul>
+                                        <li>
+                                            <input type="password " placeholder="Old password " class="pas ">
+                                        </li>
+                                        <li>
+                                            <input type="password " placeholder="New password " class="pas ">
+                                        </li>
+                                        <li>
+                                            <input type="password " placeholder="Confirm password " class="pas ">
+                                        </li>
+                                    </ul>
+                                </div> -->
+                            </div>
+                            <div class="row change ">
+                                <!-- <div class="col-md-4 offset-sm-3 ">
+                                    <md-button ng-click="changePhoto() " class="md-raised md-primary but ">
+                                        Change photo
+                                    </md-button>
+                                </div> -->
+                                <!-- 
+                                <div class="col-md-5 ">
+                                    <md-button ng-click="changePass() " class="md-raised md-primary but ">
+                                        Change password
+                                    </md-button>
+                                </div> -->
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+                <md-tab label="2fa ">
+                    <md-content class="md-padding white contentPadDown ">
+                        <div class="container-fluid ">
+                            <div class="row justify-content-center auth " ng-if="emailConf">
+                                <div class="col" style="text-align:center">
+                                    <h3>Check your email!</h3>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center auth" ng-if="!emailConf">
+                                <div class="row " ng-if="tfa">
+                                    <div class="col tfa">
+                                        <h3>Disable 2FA: </h3>
+                                    </div>
+                                    <div class="col tfa">
+                                        <md-button class="md-raised md-primary but" ng-click="hideAdvanced()">
+                                            Disable
+                                        </md-button>
+                                    </div>
+                                </div>
+                                <div class="col-4 tfa" ng-if="!tfa">
+                                    <h3>
+                                        Two-factor authentication improves the security of your account. In addition to your normal credentials, you`ll allso need
+                                        to provide an authentication code when logging in.
+                                    </h3>
+                                    <!-- <md-button class="md-raised md-primary but " ng-click="showAdvanced($event) ">
+                                        2fa
+                                    </md-button> -->
+                                    <!-- <md-button class="md-raised md-primary but " ng-click="test() ">
+                                        test
+                                    </md-button> -->
+                                </div>
+                                <div class="col-4 tfa " style="text-align: center " ng-if="!tfa">
+                                    <label>Get Google Authenticator</label>
+                                    <div class="row ">
+                                        <div class="col mobile ">
+                                            <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=ru
+                                        " target="_blank ">Google play</a>
+                                        </div>
+                                        <div class="col mobile ">
+                                            <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8
+                                        " target="_blank ">App store</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4 tfa " ng-if="!tfa" style="text-align: center">
+                                    <md-button class="md-raised md-primary but " ng-click="getCode()">
+                                        Enable
+                                    </md-button>
+                                </div>
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </div>
+    </md-content>
+</div>
+<!-- 
+<div class="btn btn-primary btn-upload " upload-button // Mandatory, the url of the backend that is going to handle the upload
+    url="/upload " // Optional, file param name for upload param="file " // Optional, object to send as form data with the upload
+    data="formData
+                                        " // Optional, comma separated list or array of allowed mimetypes, defaults to allowing all types accept="{{acceptTypes}} "
+// Optional, Allow selecting multiple files, defaults to false multiple="{{allowMultiple}} " // Optional, force all uploads
+    through the iframe solution, defaults to false and should normally not be included force-iframe-upload="{{forceIframeUpload}}
+                                        "
+// Optional, make file input required and add ng-invalid-required if required is set to true on the input button required="true|false "
+    on-upload="onUpload(files) " // Optional callback when uploading starts on-success="onSuccess(response) " // Optional callback
+    on-error="onError(response) " // Optional callback on-complete="onComplete(response) " // Optional, callback (called on both
+    on-success and on-error)>Fileupload</div>  -->
+</div>
