@@ -21,7 +21,8 @@ app.service("MainService", [
                         localStorage.refreshToken = res.data.refresh_token
                         localStorage.tfa = res.data.two_factor
                     } else if (res.data.two_factor === true) {
-                        localStorage.encoded = res.data.encoded
+                        localStorage.encoded = res.data.encoded_payload
+                        // console.log(res)
                         localStorage.tfa = res.data.two_factor
                         this.errorMessage = false
                     }

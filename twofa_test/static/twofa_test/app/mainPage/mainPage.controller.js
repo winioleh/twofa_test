@@ -67,7 +67,7 @@ app.controller("MainPageCtrl", [
                     function(answer) {
                         $http
                             .post("/api-two_factor-auth/", {
-                                encoded: localStorage.encoded,
+                                encoded_payload: localStorage.encoded,
                                 code: answer
                             })
                             .then(res => {

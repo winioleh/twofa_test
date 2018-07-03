@@ -18,7 +18,7 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path("", views.Index.as_view()),
     url(r'^api-token-auth/', views.CheckTwoFactor.as_view()), # need user credentials (username and password)
-    url(r'^api-two_factor-auth/', views.AuthentificateUser.as_view()), # need encoded data about user and code that entered by current user
+    # url(r'^api-two_factor-auth/', views.AuthentificateUser.as_view()), # need encoded data about user and code that entered by current user
     url(r'^api-token-refresh/', refresh_jwt_token), # need refresh_token
     url(r'^get-qr-for-adding/', views.AddTwoFactorAuth.as_view()), # need only JWT in header
     url(r'^confirm_factor/', views.ConfirmTwoFactor.as_view()), # need code (second factor)
