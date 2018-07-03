@@ -210,8 +210,7 @@ def deactivate(request, uidb64, token1):
         profile.email_cofirmed = True
         profile.save()
 
-        print(request.META["HTTP_HOST"]+'/#/ownroom')
-        response = redirect(request.META["HTTP_HOST"]+'/#/ownroom')
+        response = redirect(request.META["HTTP_HOST"].spit('/')[4]+'/#/ownroom')
         return response
     else:
         return render(request, 'account_activation_invalid.html')
@@ -234,7 +233,7 @@ def activate(request, uidb64, token1):
         profile.email_cofirmed = True
         profile.save()
 
-        response = redirect(request.META["HTTP_HOST"]+'/#/ownroom')
+        response = redirect(request.META["HTTP_HOST"].spit('/')[4] + '/#/ownroom')
         return response
     else:
         return render(request, 'account_activation_invalid.html')
