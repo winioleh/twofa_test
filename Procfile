@@ -1,1 +1,1 @@
-web: gunicorn bootcamp.wsgi --log-file - 
+web: gunicorn first_task.wsgi --log-file -
