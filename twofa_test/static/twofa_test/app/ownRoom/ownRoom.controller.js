@@ -190,7 +190,7 @@ app.controller("OwnRoomCtrl", [
                                     // $scope.hideAdvanced()
                                 } else if (res.data.email) {
                                     $scope.showAlert()
-                                    $scope.tfa = false
+                                    // $scope.tfa = false
                                     // $scope.logOut()
                                 }
                             })
