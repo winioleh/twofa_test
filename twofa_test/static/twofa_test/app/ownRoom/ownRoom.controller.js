@@ -29,6 +29,18 @@ app.controller("OwnRoomCtrl", [
                 .get("/api/users/")
                 .then(ress => {
                     localStorage.curres = JSON.stringify(ress.data)
+                    $scope.curres = JSON.parse(localStorage.curres)
+                    $scope.userNLSArr = $scope.curres.name.split(" ")
+                    $scope.userLastName = $scope.userNLSArr[0]
+                    $scope.userName = $scope.userNLSArr[1]
+                    $scope.userSurname = $scope.userNLSArr[2]
+                    // $scope.userPassword = $scope.curres.password
+                    $scope.userLogin = $scope.curres.username
+                    $scope.userPhoto = $scope.curres.photo
+                    $scope.userEmail = $scope.curres.email
+                    $scope.tfa = $scope.curres.two_fa_check
+                    $scope.emailConf = $scope.curres.need_comfirm
+                    $scope.errorCode = false
                 })
                 .catch(res => {
                     if (res.status === 401) {
@@ -44,29 +56,16 @@ app.controller("OwnRoomCtrl", [
                                     localStorage.curres = JSON.stringify(
                                         ress.data
                                     )
+                                    localStorage.tfa = ress.data.two_factor
+                                    $scope.emailConf = ress.data.need_comfirm
                                 })
                             })
                     }
                 })
-            $scope.curres = JSON.parse(localStorage.curres)
-            $scope.userNLSArr = $scope.curres.name.split(" ")
-            $scope.userLastName = $scope.userNLSArr[0]
-            $scope.userName = $scope.userNLSArr[1]
-            $scope.userSurname = $scope.userNLSArr[2]
-            $scope.userPassword = $scope.curres.password
-            $scope.userLogin = $scope.curres.username
-            $scope.userPhoto = $scope.curres.photo
-            $scope.userEmail = $scope.curres.email
-            $scope.tfa = $scope.curres.two_fa_check
-            $scope.emailConf = $scope.curres.need_comfirm
-            $scope.errorCode = false
-            // $scope.textCode = $scope.curres.SECKRET_KEY
+
             cssInjector.add(rootStatic + "ownRoom/ownRoom.css")
         }
         $scope.logOut = function() {
-            // if ($cookies.getAll().csrftoken) {
-            //     $cookies.remove("csrftoken")
-            // }
             $window.localStorage.clear()
             $window.location.href = "/"
         }
@@ -119,15 +118,17 @@ app.controller("OwnRoomCtrl", [
                         $http.defaults.headers.common.Authorization =
                             "JWT " + localStorage.token
                         $http
-                            .post("/confirm_factor/", {
+                            .post("/confirm_factor_activation/", {
                                 code: answer
                             })
                             .then(res => {
                                 if (res.data.code) {
                                     $scope.errorCode = true
-                                    // $scope.showErrAlert()
                                     $scope.showAdvanced()
+
+                                    // $scope.showErrAlert()
                                 } else if (res.data.email) {
+                                    $scope.emailConf = true
                                     $scope.showAlert()
                                     // $scope.tfa = true
                                     // $scope.logOut()
@@ -172,6 +173,9 @@ app.controller("OwnRoomCtrl", [
                     controller: HideDialogController,
                     templateUrl: rootStatic + "ownRoom/removeDialog.tmpl.html",
                     parent: angular.element(document.body),
+                    locals: {
+                        error: $scope.errorCode
+                    },
                     targetEvent: ev,
                     clickOutsideToClose: true,
                     fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
@@ -181,15 +185,17 @@ app.controller("OwnRoomCtrl", [
                         $http.defaults.headers.common.Authorization =
                             "JWT " + localStorage.token
                         $http
-                            .post("/confirm_factor/", {
+                            .post("/confirm_factor_deactivation/", {
                                 code: answer
                             })
                             .then(res => {
                                 if (res.data.code) {
-                                    $scope.showErrAlert()
-                                    // $scope.hideAdvanced()
+                                    $scope.errorCode = true
+                                    // $scope.showErrAlert()
+                                    $scope.hideAdvanced()
                                 } else if (res.data.email) {
                                     $scope.showAlert()
+                                    $scope.emailConf = true
                                     // $scope.tfa = false
                                     // $scope.logOut()
                                 }
@@ -212,7 +218,8 @@ app.controller("OwnRoomCtrl", [
                 )
         }
 
-        function HideDialogController($scope, $mdDialog) {
+        function HideDialogController($scope, $mdDialog, error) {
+            $scope.error = error
             $scope.changeCode = function() {
                 if ($scope.currentCode.length === 6) {
                     $scope.answer($scope.currentCode)

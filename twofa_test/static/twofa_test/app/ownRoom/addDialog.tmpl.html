@@ -7,23 +7,21 @@
             </div>
         </md-toolbar>
         <md-dialog-content>
-            <div class=" md-dialog-content " style="text-align: center; ">
-                <h2 ng-if="!error">Scan this QR code with Google Authenticator.</h2>
-                <img style="margin: auto; max-width: 100%; " alt="qrcode" ng-src="{{'data:image/png;base64,'+qrCode}}">
-                <h2 ng-if="!error">Enter code from Google Authenticator to confirm</h2>
-                <h2 ng-if="error">You entered wrong code!</h2>
-                <input type="text" style="padding-top: 5px;
-                padding-bottom: 5px;
-                margin-top: 20px;
-                margin-bottom: 20px;
-                border: 3px solid #12b58b;
-                font-size: 20px; text-align: center;" ng-model="currentCode" ng-change="changeCode()">
-                <h3 ng-if="!error">Or add this text code in GA key input: </h3>
-                <h3>{{textCode}}</h3>
+            <div class=" md-dialog-content " style="text-align: center; ">
+                <h4 ng-if="!error">Scan this QR code with Google Authenticator.</h4>
+                <img style="margin: auto; max-width: 100%; " alt="qrcode" ng-src="{{'data:image/png;base64,'+qrCode}}">
+                <h4 ng-if="!error">Enter code from Google Authenticator to confirm, or add this text code in GA key input: </h4>
+                <h4>{{textCode}}</h4>
+                <h4 ng-if="error">You entered wrong code!</h4>
+                <input type="text" style="padding-top: 5px;
+                padding-bottom: 5px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                border: 3px solid #12b58b;
+                font-size: 20px; text-align: center;" ng-model="currentCode" ng-change="changeCode()">
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row ">
-
             <!-- <span flex></span>
             <md-button ng-click="answer(currentCode) " style="background-color: #12b58b;">
                 Submit

@@ -30,6 +30,9 @@ app.controller("MainPageCtrl", [
         init()
 
         function init() {
+            if (localStorage.curres) {
+                $window.location.href = "/#/ownroom"
+            }
             cssInjector.add(rootStatic + "mainPage/mainPage.css")
         }
         async function signIn() {
@@ -59,6 +62,9 @@ app.controller("MainPageCtrl", [
                     controller: DialogController,
                     templateUrl: rootStatic + "mainPage/dialog.tmpl.html",
                     parent: angular.element(document.body),
+                    locals: {
+                        error: $scope.errorCode
+                    },
                     targetEvent: ev,
                     clickOutsideToClose: true,
                     fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
@@ -66,13 +72,13 @@ app.controller("MainPageCtrl", [
                 .then(
                     function(answer) {
                         $http
-                            .post("/api-two_factor-auth/", {
+                            .post("/api-token-auth/", {
                                 encoded_payload: localStorage.encoded,
                                 code: answer
                             })
                             .then(res => {
                                 if (res.data.non_field_errors) {
-                                    alert("Incorrect code")
+                                    $scope.errorCode = true
                                     $scope.showAdvanced()
                                 } else {
                                     localStorage.token = res.data.token
@@ -98,7 +104,8 @@ app.controller("MainPageCtrl", [
                     }
                 )
         }
-        function DialogController($scope, $mdDialog) {
+        function DialogController($scope, $mdDialog, error) {
+            $scope.error = error
             $scope.changeCode = function() {
                 if ($scope.currentCode.length === 6) {
                     $scope.answer($scope.currentCode)

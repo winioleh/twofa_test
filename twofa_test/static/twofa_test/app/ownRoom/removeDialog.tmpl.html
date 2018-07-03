@@ -8,7 +8,8 @@
         </md-toolbar>
         <md-dialog-content>
             <div class=" md-dialog-content " style="text-align: center; ">
-                <h2>Enter code from Google Authenticator to confirm</h2>
+                <h3>Enter code from Google Authenticator to confirm</h3>
+                <h4 ng-if="error">You entered wrong code!</h4>
                 <input type="text" style="padding-top: 5px;
                 padding-bottom: 5px;
                 margin-top: 20px;
