@@ -107,7 +107,11 @@ app.controller("MainPageCtrl", [
         function DialogController($scope, $mdDialog, error) {
             $scope.error = error
             $scope.changeCode = function() {
-                if ($scope.currentCode.length === 6) {
+                if ($scope.currentCode.length === 3) {
+                    $scope.currentCode = $scope.currentCode + " "
+                }
+                if ($scope.currentCode.length === 7) {
+                    $scope.currentCode = $scope.currentCode.replace(/\s/g, "")
                     $scope.answer($scope.currentCode)
                 }
             }

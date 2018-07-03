@@ -56,8 +56,23 @@ app.controller("OwnRoomCtrl", [
                                     localStorage.curres = JSON.stringify(
                                         ress.data
                                     )
-                                    localStorage.tfa = ress.data.two_factor
-                                    $scope.emailConf = ress.data.need_comfirm
+                                    $scope.curres = JSON.parse(
+                                        localStorage.curres
+                                    )
+                                    $scope.userNLSArr = $scope.curres.name.split(
+                                        " "
+                                    )
+                                    $scope.userLastName = $scope.userNLSArr[0]
+                                    $scope.userName = $scope.userNLSArr[1]
+                                    $scope.userSurname = $scope.userNLSArr[2]
+                                    // $scope.userPassword = $scope.curres.password
+                                    $scope.userLogin = $scope.curres.username
+                                    $scope.userPhoto = $scope.curres.photo
+                                    $scope.userEmail = $scope.curres.email
+                                    $scope.tfa = $scope.curres.two_fa_check
+                                    $scope.emailConf =
+                                        $scope.curres.need_comfirm
+                                    $scope.errorCode = false
                                 })
                             })
                     }
@@ -150,7 +165,12 @@ app.controller("OwnRoomCtrl", [
             $scope.textCode = textCode
             $scope.error = error
             $scope.changeCode = function() {
-                if ($scope.currentCode.length === 6) {
+                if ($scope.currentCode.length === 3) {
+                    $scope.currentCode = $scope.currentCode + " "
+                }
+                if ($scope.currentCode.length === 7) {
+                    $scope.currentCode = $scope.currentCode.replace(/\s/g, "")
+
                     $scope.answer($scope.currentCode)
                 }
             }
@@ -221,7 +241,11 @@ app.controller("OwnRoomCtrl", [
         function HideDialogController($scope, $mdDialog, error) {
             $scope.error = error
             $scope.changeCode = function() {
-                if ($scope.currentCode.length === 6) {
+                if ($scope.currentCode.length === 3) {
+                    $scope.currentCode = $scope.currentCode + " "
+                }
+                if ($scope.currentCode.length === 7) {
+                    $scope.currentCode = $scope.currentCode.replace(/\s/g, "")
                     $scope.answer($scope.currentCode)
                 }
             }
