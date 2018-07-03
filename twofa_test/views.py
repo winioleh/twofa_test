@@ -48,7 +48,8 @@ class TokenViewSet(viewsets.ModelViewSet):
 class CheckTwoFactor(ObtainJSONWebToken):
 
     def post(self, request, *args, **kwargs):
-        if request.data['encoded_payload']:
+        check = request.data.get('encoded_payload', None)
+        if check:
             encoded_payload = request.data['encoded_payload']
             code = request.data['code']
 
@@ -130,7 +131,7 @@ class AddTwoFactorAuth(APIView):
         return Response(context)
 
 
-class ConfirmTwoFactor(APIView):
+class ConfirmTwoFactorActivation(APIView):
     def post(self, request):
         current_code = pyotp.TOTP(request.user.profile.SECKRET_KEY).now()
         entered_code = request.data['code']
@@ -154,14 +155,65 @@ class ConfirmTwoFactor(APIView):
             context = {
                 'email': 'need confirm'
             }
-
         else:
-
             context = {
                 'code': 'wrong code'
             }
-
         return Response(context)
+
+
+class ConfirmTwoFactorDeactivation(APIView):
+    def post(self, request):
+        current_code = pyotp.TOTP(request.user.profile.SECKRET_KEY).now()
+        entered_code = request.data['code']
+        if str(current_code) == str(entered_code):
+            mail_subject = 'Confirm adding Two-factors Authentications.'
+            current_site = request.META["HTTP_HOST"]
+
+            message = render_to_string('account_deactivation_email.html', {
+                'user': request.user,
+                'domain': current_site,
+                'uid': urlsafe_base64_encode(force_bytes(request.user.pk)).decode("utf-8"),
+                'token': str(confirmation_token.make_token(request.user))
+            })
+
+            profile = request.user.profile
+            email = EmailMessage(mail_subject, message, to=[profile.email])
+            email.send()
+            profile.need_comfirm = True
+            profile.save()
+
+            context = {
+                'email': 'need confirm'
+            }
+        else:
+            context = {
+                'code': 'wrong code'
+            }
+        return Response(context)
+
+
+def deactivate(request, uidb64, token1):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+        print(user)
+
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and confirmation_token.check_token(user, token1):
+        profile = Profile.objects.get(user=user)
+
+        profile.two_fa_check = False
+
+        profile.need_comfirm = False
+        profile.email_cofirmed = True
+        profile.save()
+
+        response = redirect('http://localhost:8000/#/ownroom')
+        return response
+    else:
+        return render(request, 'account_activation_invalid.html')
 
 
 def activate(request, uidb64, token1):
@@ -174,10 +226,9 @@ def activate(request, uidb64, token1):
         user = None
     if user is not None and confirmation_token.check_token(user, token1):
         profile = Profile.objects.get(user=user)
-        if profile.two_fa_check:
-            profile.two_fa_check = False
-        else:
-            profile.two_fa_check = True
+
+        profile.two_fa_check = True
+
         profile.need_comfirm = False
         profile.email_cofirmed = True
         profile.save()
