@@ -16,8 +16,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/twofa_test/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="481">
-              <caret line="267" lean-forward="true" selection-start-line="267" selection-end-line="267" />
+            <state>
+              <caret line="208" column="36" lean-forward="true" selection-start-line="208" selection-start-column="36" selection-end-line="208" selection-end-column="36" />
             </state>
           </provider>
         </entry>
@@ -414,8 +414,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/twofa_test/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="481">
-          <caret line="267" lean-forward="true" selection-start-line="267" selection-end-line="267" />
+        <state>
+          <caret line="208" column="36" lean-forward="true" selection-start-line="208" selection-start-column="36" selection-end-line="208" selection-end-column="36" />
         </state>
       </provider>
     </entry>
