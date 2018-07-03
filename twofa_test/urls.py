@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^confirm_factor_activation/', views.ConfirmTwoFactorActivation.as_view()), # need code (second factor)
     url(r'^confirm_factor_deactivation/', views.ConfirmTwoFactorDeactivation.as_view()), # need code (second factor)
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token1>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', views.activate, name='activate'),
+    url(r'^deactivate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token1>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', views.deactivate, name='deactivate'),
 ]

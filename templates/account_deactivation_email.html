@@ -3,6 +3,6 @@ Hi {{ user.username }},
 
 Please click on the link below to confirm deactivation two-factor authentification:
 
-http://{{ domain }}{% url "activate" uidb64=uid token1=token %}
+http://{{ domain }}{% url "deactivate" uidb64=uid token1=token %}
 
 {% endautoescape %}
