@@ -59,6 +59,7 @@ app.controller("OwnRoomCtrl", [
             $scope.userEmail = $scope.curres.email
             $scope.tfa = $scope.curres.two_fa_check
             $scope.emailConf = $scope.curres.need_comfirm
+            $scope.errorCode = false
             // $scope.textCode = $scope.curres.SECKRET_KEY
             cssInjector.add(rootStatic + "ownRoom/ownRoom.css")
         }
@@ -107,7 +108,8 @@ app.controller("OwnRoomCtrl", [
                     targetEvent: ev,
                     locals: {
                         qrCode: $scope.codeData.encoded_qr,
-                        textCode: $scope.codeData.secret_key
+                        textCode: $scope.codeData.secret_key,
+                        error: $scope.errorCode
                     },
                     clickOutsideToClose: true,
                     fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
@@ -122,8 +124,9 @@ app.controller("OwnRoomCtrl", [
                             })
                             .then(res => {
                                 if (res.data.code) {
-                                    $scope.showErrAlert()
-                                    // $scope.showAdvanced()
+                                    $scope.errorCode = true
+                                    // $scope.showErrAlert()
+                                    $scope.showAdvanced()
                                 } else if (res.data.email) {
                                     $scope.showAlert()
                                     // $scope.tfa = true
@@ -135,9 +138,16 @@ app.controller("OwnRoomCtrl", [
                 )
         }
 
-        function ShowDialogController($scope, $mdDialog, qrCode, textCode) {
+        function ShowDialogController(
+            $scope,
+            $mdDialog,
+            qrCode,
+            textCode,
+            error
+        ) {
             $scope.qrCode = qrCode
             $scope.textCode = textCode
+            $scope.error = error
             $scope.changeCode = function() {
                 if ($scope.currentCode.length === 6) {
                     $scope.answer($scope.currentCode)
