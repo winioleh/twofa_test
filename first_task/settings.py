@@ -25,7 +25,7 @@ SECRET_KEY = 'sm=fs%#*fo=*n4^_)=hq%qua=0piknm*p4r01kr-8-7hpob!5!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['still-basin-98962.herokuapp.com']
+ALLOWED_HOSTS = ['still-basin-98962.herokuapp.com','localhost']
 
 
 # Application definition
