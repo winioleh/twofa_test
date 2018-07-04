@@ -7,3 +7,4 @@ PyQRCode==1.2.1
 requests==2.18.4
 gunicorn>=19.1.0
 six==1.11.0
+Pillow
