@@ -23,6 +23,7 @@ app.controller("OwnRoomCtrl", [
     ) {
         init()
         function init() {
+            cssInjector.add(rootStatic + "ownRoom/ownRoom.css")
             $http.defaults.headers.common.Authorization =
                 "JWT " + localStorage.token
             $http
@@ -77,7 +78,6 @@ app.controller("OwnRoomCtrl", [
                             })
                     }
                 })
-            cssInjector.add(rootStatic + "ownRoom/ownRoom.css")
         }
         $scope.logOut = function() {
             $window.localStorage.clear()
@@ -167,6 +167,13 @@ app.controller("OwnRoomCtrl", [
             $scope.textCode = textCode
             $scope.error = error
             $scope.active = true
+            $scope.checkBack = function($event) {
+
+                if ($event.keyCode === 8 && $scope.currentCode.length === 4) {
+                    $scope.currentCode = $scope.currentCode.substring(0, $scope.currentCode.length - 1)
+
+                }
+            }
             $scope.changeCode = function() {
                 if ($scope.currentCode.length === 3) {
                     $scope.currentCode = $scope.currentCode + " "
@@ -268,6 +275,13 @@ app.controller("OwnRoomCtrl", [
             cssInjector.add(rootStatic + "ownRoom/modalAdd.css")
             $scope.error = error
             $scope.active = true
+            $scope.checkBack = function($event) {
+
+                if ($event.keyCode === 8 && $scope.currentCode.length === 4) {
+                    $scope.currentCode = $scope.currentCode.substring(0, $scope.currentCode.length - 1)
+
+                }
+            }
             $scope.changeCode = function() {
                 if ($scope.currentCode.length === 3) {
                     $scope.currentCode = $scope.currentCode + " "

@@ -82,6 +82,13 @@ app.controller("MainPageCtrl", [
             cssInjector.add(rootStatic + "mainPage/modalAdd.css")
             $scope.error = error
             $scope.active = true
+            $scope.checkBack = function($event) {
+
+                if ($event.keyCode === 8 && $scope.currentCode.length === 4) {
+                    $scope.currentCode = $scope.currentCode.substring(0, $scope.currentCode.length - 1)
+
+                }
+            }
             $scope.changeCode = function() {
                 if ($scope.currentCode.length === 3) {
                     $scope.currentCode = $scope.currentCode + " "
