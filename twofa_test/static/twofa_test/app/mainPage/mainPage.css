@@ -23,8 +23,8 @@
 
 button {
     margin-top: 20px;
-    height: 50px;
-    width: 250px;
+    height: 30px;
+    width: 150px;
     max-width: 100%;
 }
 
@@ -84,4 +84,12 @@ md-input-container.md-default-theme:not(.md-input-invalid).md-input-resized
     .md-input,
 md-input-container:not(.md-input-invalid).md-input-resized .md-input {
     border-color: #12b58b;
+}
+
+.btn {
+    background-color: #12b58b !important;
+    margin-top: 20px;
+    height: 50px;
+    width: 250px;
+    max-width: 100%;
 }

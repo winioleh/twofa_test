@@ -40,7 +40,7 @@ app.controller("OwnRoomCtrl", [
                     $scope.userEmail = $scope.curres.email
                     $scope.tfa = $scope.curres.two_fa_check
                     $scope.emailConf = $scope.curres.need_comfirm
-                    $scope.errorCode = false
+                    // $scope.errorCode = false
                 })
                 .catch(res => {
                     if (res.status === 401) {
@@ -72,12 +72,11 @@ app.controller("OwnRoomCtrl", [
                                     $scope.tfa = $scope.curres.two_fa_check
                                     $scope.emailConf =
                                         $scope.curres.need_comfirm
-                                    $scope.errorCode = false
+                                    // $scope.errorCode = false
                                 })
                             })
                     }
                 })
-
             cssInjector.add(rootStatic + "ownRoom/ownRoom.css")
         }
         $scope.logOut = function() {
@@ -130,25 +129,26 @@ app.controller("OwnRoomCtrl", [
                 })
                 .then(
                     function(answer) {
-                        $http.defaults.headers.common.Authorization =
-                            "JWT " + localStorage.token
-                        $http
-                            .post("/confirm_factor_activation/", {
-                                code: answer
-                            })
-                            .then(res => {
-                                if (res.data.code) {
-                                    $scope.errorCode = true
-                                    $scope.showAdvanced()
-
-                                    // $scope.showErrAlert()
-                                } else if (res.data.email) {
-                                    $scope.emailConf = true
-                                    $scope.showAlert()
-                                    // $scope.tfa = true
-                                    // $scope.logOut()
-                                }
-                            })
+                        $scope.emailConf = true
+                        $scope.showAlert()
+                        // $http.defaults.headers.common.Authorization =
+                        //     "JWT " + localStorage.token
+                        // $http
+                        //     .post("/confirm_factor_activation/", {
+                        //         code: answer
+                        //     })
+                        //     .then(res => {
+                        //         if (res.data.code) {
+                        //             $scope.errorCode = true
+                        //             $scope.showAdvanced()
+                        //             // $scope.showErrAlert()
+                        //         } else if (res.data.email) {
+                        //             $scope.emailConf = true
+                        //             $scope.showAlert()
+                        //             // $scope.tfa = true
+                        //             // $scope.logOut()
+                        //         }
+                        //     })
                     },
                     function() {}
                 )
@@ -159,19 +159,22 @@ app.controller("OwnRoomCtrl", [
             $mdDialog,
             qrCode,
             textCode,
-            error
+            error,
+            cssInjector
         ) {
+            cssInjector.add(rootStatic + "ownRoom/modalAdd.css")
             $scope.qrCode = qrCode
             $scope.textCode = textCode
             $scope.error = error
+            $scope.active = true
             $scope.changeCode = function() {
                 if ($scope.currentCode.length === 3) {
                     $scope.currentCode = $scope.currentCode + " "
                 }
                 if ($scope.currentCode.length === 7) {
-                    $scope.currentCode = $scope.currentCode.replace(/\s/g, "")
+                    $scope.sendCode = $scope.currentCode.replace(/\s/g, "")
 
-                    $scope.answer($scope.currentCode)
+                    $scope.answer($scope.sendCode)
                 }
             }
             $scope.hide = function() {
@@ -183,7 +186,28 @@ app.controller("OwnRoomCtrl", [
             }
 
             $scope.answer = function(answer) {
-                $mdDialog.hide(answer)
+                $scope.active = false
+                $http.defaults.headers.common.Authorization =
+                    "JWT " + localStorage.token
+                $http
+                    .post("/confirm_factor_activation/", {
+                        code: answer
+                    })
+                    .then(res => {
+                        if (res.data.code) {
+                            $scope.active = true
+                            $scope.error = true
+                            // $scope.showAdvanced()
+
+                            // $scope.showErrAlert()
+                        } else if (res.data.email) {
+                            $scope.active = true
+                            $mdDialog.hide()
+
+                            // $scope.tfa = true
+                            // $scope.logOut()
+                        }
+                    })
             }
         }
 
@@ -202,51 +226,55 @@ app.controller("OwnRoomCtrl", [
                 })
                 .then(
                     function(answer) {
-                        $http.defaults.headers.common.Authorization =
-                            "JWT " + localStorage.token
-                        $http
-                            .post("/confirm_factor_deactivation/", {
-                                code: answer
-                            })
-                            .then(res => {
-                                if (res.data.code) {
-                                    $scope.errorCode = true
-                                    // $scope.showErrAlert()
-                                    $scope.hideAdvanced()
-                                } else if (res.data.email) {
-                                    $scope.showAlert()
-                                    $scope.emailConf = true
-                                    // $scope.tfa = false
-                                    // $scope.logOut()
-                                }
-                            })
-                            .catch(res => {
-                                if (res.status === 401) {
-                                    $http
-                                        .post("/api-token-refresh/", {
-                                            refresh_token:
-                                                localStorage.refreshToken
-                                        })
-                                        .then(res => {
-                                            localStorage.token = res.data.token
-                                            $scope.hideAdvanced()
-                                        })
-                                }
-                            })
+                        $scope.emailConf = true
+                        $scope.showAlert()
+                        // $http.defaults.headers.common.Authorization =
+                        //     "JWT " + localStorage.token
+                        // $http
+                        // .post("/confirm_factor_deactivation/", {
+                        //     code: answer
+                        // })
+                        // .then(res => {
+                        //     if (res.data.code) {
+                        //         $scope.errorCode = true
+                        //         // $scope.showErrAlert()
+                        //         $scope.hideAdvanced()
+                        //     } else if (res.data.email) {
+                        //         $scope.showAlert()
+                        //         $scope.emailConf = true
+                        //         // $scope.tfa = false
+                        //         // $scope.logOut()
+                        //     }
+                        // })
+                        // .catch(res => {
+                        //     if (res.status === 401) {
+                        //         $http
+                        //             .post("/api-token-refresh/", {
+                        //                 refresh_token:
+                        //                     localStorage.refreshToken
+                        //             })
+                        //             .then(res => {
+                        //                 localStorage.token = res.data.token
+                        //                 $scope.hideAdvanced()
+                        //             })
+                        //     }
+                        // })
                     },
                     function() {}
                 )
         }
 
-        function HideDialogController($scope, $mdDialog, error) {
+        function HideDialogController($scope, $mdDialog, error, cssInjector) {
+            cssInjector.add(rootStatic + "ownRoom/modalAdd.css")
             $scope.error = error
+            $scope.active = true
             $scope.changeCode = function() {
                 if ($scope.currentCode.length === 3) {
                     $scope.currentCode = $scope.currentCode + " "
                 }
                 if ($scope.currentCode.length === 7) {
-                    $scope.currentCode = $scope.currentCode.replace(/\s/g, "")
-                    $scope.answer($scope.currentCode)
+                    $scope.sendCode = $scope.currentCode.replace(/\s/g, "")
+                    $scope.answer($scope.sendCode)
                 }
             }
             $scope.hide = function() {
@@ -258,7 +286,39 @@ app.controller("OwnRoomCtrl", [
             }
 
             $scope.answer = function(answer) {
-                $mdDialog.hide(answer)
+                $scope.active = false
+                $http.defaults.headers.common.Authorization =
+                    "JWT " + localStorage.token
+                $http
+                    .post("/confirm_factor_deactivation/", {
+                        code: answer
+                    })
+                    .then(res => {
+                        if (res.data.code) {
+                            $scope.active = true
+                            $scope.error = true
+                            // $scope.showErrAlert()
+                            // $scope.hideAdvanced()
+                        } else if (res.data.email) {
+                            $scope.active = true
+                            $mdDialog.hide()
+                            // $scope.tfa = false
+                            // $scope.logOut()
+                        }
+                    })
+                    .catch(res => {
+                        if (res.status === 401) {
+                            $http
+                                .post("/api-token-refresh/", {
+                                    refresh_token: localStorage.refreshToken
+                                })
+                                .then(res => {
+                                    localStorage.token = res.data.token
+                                    $scope.hideAdvanced()
+                                })
+                        }
+                    })
+                // $mdDialog.hide(answer)
             }
         }
 
@@ -282,26 +342,26 @@ app.controller("OwnRoomCtrl", [
                     .targetEvent(ev)
             )
         }
-        $scope.showErrAlert = function(ev) {
-            // Appending dialog to document.body to cover sidenav in docs app
-            // Modal dialogs should fully cover application
-            // to prevent interaction outside of dialog
-            $mdDialog.show(
-                $mdDialog
-                    .alert()
-                    .parent(
-                        angular.element(
-                            document.querySelector("#popupContainer")
-                        )
-                    )
-                    .clickOutsideToClose(true)
-                    .title("Info")
-                    .textContent("Wrong code!")
-                    .ariaLabel("Alert Dialog")
-                    .ok("Ok")
-                    .targetEvent(ev)
-            )
-        }
+        // $scope.showErrAlert = function(ev) {
+        //     // Appending dialog to document.body to cover sidenav in docs app
+        //     // Modal dialogs should fully cover application
+        //     // to prevent interaction outside of dialog
+        //     $mdDialog.show(
+        //         $mdDialog
+        //             .alert()
+        //             .parent(
+        //                 angular.element(
+        //                     document.querySelector("#popupContainer")
+        //                 )
+        //             )
+        //             .clickOutsideToClose(true)
+        //             .title("Info")
+        //             .textContent("Wrong code!")
+        //             .ariaLabel("Alert Dialog")
+        //             .ok("Ok")
+        //             .targetEvent(ev)
+        //     )
+        // }
     }
 ])
 

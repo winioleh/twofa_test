@@ -19,6 +19,10 @@
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row ">
+            <span flex></span>
+            <md-button ng-click="answer(currentCode) " ng-disabled="!active" class="active">
+                Submit
+            </md-button>
             <md-button ng-click="cancel() ">
                 Cancel
             </md-button>

@@ -70,33 +70,7 @@ app.controller("MainPageCtrl", [
                     fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
                 })
                 .then(
-                    function(answer) {
-                        $http
-                            .post("/api-token-auth/", {
-                                encoded_payload: localStorage.encoded,
-                                code: answer
-                            })
-                            .then(res => {
-                                if (res.data.non_field_errors) {
-                                    $scope.errorCode = true
-                                    $scope.showAdvanced()
-                                } else {
-                                    localStorage.token = res.data.token
-                                    localStorage.refreshToken =
-                                        res.data.refresh_token
-
-                                    $http.defaults.headers.common.Authorization =
-                                        "JWT " + localStorage.token
-                                    $http.get("/api/users/").then(ress => {
-                                        localStorage.curres = JSON.stringify(
-                                            ress.data
-                                        )
-                                        cssInjector.removeAll()
-                                        $window.location.href = "/#/ownroom"
-                                    })
-                                }
-                            })
-                    },
+                    function(answer) {},
                     function() {
                         $window.localStorage.clear()
                         $scope.userLogin = ""
@@ -105,14 +79,16 @@ app.controller("MainPageCtrl", [
                 )
         }
         function DialogController($scope, $mdDialog, error) {
+            cssInjector.add(rootStatic + "mainPage/modalAdd.css")
             $scope.error = error
+            $scope.active = true
             $scope.changeCode = function() {
                 if ($scope.currentCode.length === 3) {
                     $scope.currentCode = $scope.currentCode + " "
                 }
                 if ($scope.currentCode.length === 7) {
-                    $scope.currentCode = $scope.currentCode.replace(/\s/g, "")
-                    $scope.answer($scope.currentCode)
+                    $scope.sendCode = $scope.currentCode.replace(/\s/g, "")
+                    $scope.answer($scope.sendCode)
                 }
             }
             $scope.hide = function() {
@@ -124,7 +100,33 @@ app.controller("MainPageCtrl", [
             }
 
             $scope.answer = function(answer) {
-                $mdDialog.hide(answer)
+                $scope.active = false
+                $http
+                    .post("/api-token-auth/", {
+                        encoded_payload: localStorage.encoded,
+                        code: answer
+                    })
+                    .then(res => {
+                        $scope.active = true
+                        if (res.data.non_field_errors) {
+                            $scope.error = true
+                            // $scope.showAdvanced()
+                        } else {
+                            $scope.active = true
+                            localStorage.token = res.data.token
+                            localStorage.refreshToken = res.data.refresh_token
+
+                            $http.defaults.headers.common.Authorization =
+                                "JWT " + localStorage.token
+                            $http.get("/api/users/").then(ress => {
+                                localStorage.curres = JSON.stringify(ress.data)
+                                $mdDialog.hide()
+                                cssInjector.removeAll()
+                                $window.location.href = "/#/ownroom"
+                            })
+                        }
+                    })
+                // $mdDialog.hide(answer)
             }
         }
     }
